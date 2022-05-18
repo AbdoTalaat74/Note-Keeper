@@ -3,25 +3,20 @@ package com.example.notekeeper;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.notekeeper.databinding.ActivityNoteListActivtyBinding;
 
 import java.util.List;
 
-public class NoteListActivty extends AppCompatActivity {
+public class NoteListActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityNoteListActivtyBinding binding;
@@ -41,7 +36,7 @@ public class NoteListActivty extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(),MainActivity.class);
+                Intent intent = new Intent(getBaseContext(), NoteActivity.class);
                 startActivityForResult(intent,1);
             }
         });
@@ -60,6 +55,14 @@ public class NoteListActivty extends AppCompatActivity {
                 new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,notes);
         listNotes.setAdapter(notesAdapter);
 
+        listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent = new Intent(getBaseContext(), NoteActivity.class);
+                startActivity(intent);
+
+            }
+        });
     }
 
 

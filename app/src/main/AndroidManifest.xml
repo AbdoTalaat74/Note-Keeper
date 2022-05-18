@@ -10,9 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NoteKeeper" >
         <activity
-            android:name=".NoteListActivty"
+            android:name=".NoteListActivity"
             android:exported="true"
-            android:label="@string/title_activity_note_list_activty"
+            android:label="@string/app_name"
             android:theme="@style/Theme.NoteKeeper.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,8 +20,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:exported="true" >
+            android:name=".NoteActivity"
+            android:exported="false"
+            android:label="@string/title_activity_note">
 
         </activity>
     </application>
