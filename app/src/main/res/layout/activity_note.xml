@@ -26,7 +26,6 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="@+id/spinner_courses"
         app:layout_constraintStart_toStartOf="@+id/spinner_courses"
         app:layout_constraintTop_toBottomOf="@+id/spinner_courses" />
@@ -39,7 +38,6 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="@+id/tetxt_note_title"
         app:layout_constraintStart_toStartOf="@+id/tetxt_note_title"
         app:layout_constraintTop_toBottomOf="@+id/tetxt_note_title" />

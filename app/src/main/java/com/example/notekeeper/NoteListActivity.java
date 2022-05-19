@@ -23,7 +23,6 @@ public class NoteListActivity extends AppCompatActivity {
         startActivity(fabIntent);
     }
 
-    private AppBarConfiguration appBarConfiguration;
     private ActivityNoteListActivtyBinding binding;
 
     @Override
@@ -38,13 +37,13 @@ public class NoteListActivity extends AppCompatActivity {
 
         initializeDisplayContent();
 
-//        binding.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent fabIntent = new Intent(NoteListActivity.this, NoteActivity.class);
-//                startActivity(fabIntent);
-//            }
-//        });
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent fabIntent = new Intent(NoteListActivity.this, NoteActivity.class);
+                startActivity(fabIntent);
+            }
+        });
 
 
     }
@@ -64,7 +63,7 @@ public class NoteListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent(getBaseContext(), NoteActivity.class);
-                intent.putExtra("Note Item",notes.get(position));
+                intent.putExtra("Note Position",position);
                 startActivity(intent);
 
             }
