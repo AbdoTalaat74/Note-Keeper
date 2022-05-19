@@ -13,13 +13,13 @@ public final class NoteInfo implements Parcelable {
         mTitle = title;
         mText = text;
     }
+
     //Parcelable constructor
     protected NoteInfo(Parcel in) {
         mCourse = in.readParcelable(CourseInfo.class.getClassLoader());
         mTitle = in.readString();
         mText = in.readString();
     }
-
 
 
     public CourseInfo getCourse() {
@@ -93,6 +93,8 @@ public final class NoteInfo implements Parcelable {
         public NoteInfo[] newArray(int size) {
             return new NoteInfo[size];
         }
+
+
     };
 
 

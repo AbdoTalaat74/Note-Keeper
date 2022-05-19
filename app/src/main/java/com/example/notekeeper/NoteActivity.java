@@ -20,7 +20,27 @@ public class NoteActivity extends AppCompatActivity {
     EditText noteBody;
     private boolean mIsNewNote;
     NoteInfo noteInfo;
+    private int notePosition;
+    private boolean isCancelling;
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isCancelling) {
+            if (mIsNewNote) {
+                DataManager.getInstance().removeNote(notePosition);
+            }
+        } else {
+            saveNote();
+        }
+
+    }
+
+    private void saveNote() {
+        noteInfo.setCourse((CourseInfo) courseSpinner.getSelectedItem());
+        noteInfo.setTitle(noteTitle.getText().toString());
+        noteInfo.setText(noteBody.getText().toString());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +64,11 @@ public class NoteActivity extends AppCompatActivity {
         if (!mIsNewNote)
             displayNote(courseSpinner, noteTitle, noteBody);
 
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.note_menu,menu);
+        getMenuInflater().inflate(R.menu.note_menu, menu);
         return true;
     }
 
@@ -57,9 +76,12 @@ public class NoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_email){
+        if (id == R.id.action_email) {
             sendEmail();
             return true;
+        } else if (id == R.id.action_cancel) {
+            isCancelling = true;
+            finish();
         }
         return super.onOptionsItemSelected(item);
 
@@ -67,15 +89,15 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void sendEmail() {
-        CourseInfo course =(CourseInfo) courseSpinner.getSelectedItem();
+        CourseInfo course = (CourseInfo) courseSpinner.getSelectedItem();
         String subject = noteTitle.getText().toString();
         String text = "Checkout what I learned in the Pluralsight course \n" + course.getTitle() +
                 "\n" + noteTitle.getText();
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc2822");
-        intent.putExtra(Intent.EXTRA_SUBJECT,subject);
-        intent.putExtra(Intent.EXTRA_TEXT,text);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, text);
         startActivity(intent);
 
     }
@@ -94,9 +116,20 @@ public class NoteActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int position = intent.getIntExtra("Note Position", POSITION_NOT_SET);
         mIsNewNote = position == POSITION_NOT_SET;
-        if (!mIsNewNote) {
+        if (mIsNewNote) {
+
+            createNewNote();
+
+        } else {
             noteInfo = DataManager.getInstance().getNotes().get(position);
         }
+
+    }
+
+    private void createNewNote() {
+        DataManager dataManager = DataManager.getInstance();
+        notePosition = dataManager.createNewNote();
+        noteInfo = dataManager.getNotes().get(notePosition);
 
     }
 
