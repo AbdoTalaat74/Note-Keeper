@@ -18,6 +18,8 @@ import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
 
+    private ArrayAdapter<NoteInfo> notesAdapter;
+
     public void onClick(View view){
         Intent fabIntent = new Intent(NoteListActivity.this, NoteActivity.class);
         startActivity(fabIntent);
@@ -48,15 +50,18 @@ public class NoteListActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        notesAdapter.notifyDataSetChanged();
+    }
 
     private void initializeDisplayContent(){
 
         ListView listNotes = findViewById(R.id.course_list);
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
-        ArrayAdapter<NoteInfo> notesAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,notes);
+        notesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,notes);
         listNotes.setAdapter(notesAdapter);
 
         listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {

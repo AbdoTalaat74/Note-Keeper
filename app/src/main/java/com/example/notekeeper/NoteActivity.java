@@ -10,6 +10,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
@@ -19,9 +20,10 @@ public class NoteActivity extends AppCompatActivity {
     EditText noteTitle;
     EditText noteBody;
     private boolean mIsNewNote;
-    NoteInfo noteInfo;
+    public NoteInfo noteInfo;
     private int notePosition;
     private boolean isCancelling;
+    private NoteActivityViewModel naViewModel;
 
     @Override
     protected void onPause() {
@@ -29,11 +31,21 @@ public class NoteActivity extends AppCompatActivity {
         if (isCancelling) {
             if (mIsNewNote) {
                 DataManager.getInstance().removeNote(notePosition);
+            } else {
+                storePreviousNoteValues();
             }
         } else {
             saveNote();
         }
 
+    }
+
+    private void storePreviousNoteValues() {
+
+        CourseInfo courseInfo = DataManager.getInstance().getCourse(naViewModel.originalCourseId);
+        noteInfo.setCourse(courseInfo);
+        noteInfo.setTitle(naViewModel.originalCourseTitle);
+        noteInfo.setText(naViewModel.originalCourseText);
     }
 
     private void saveNote() {
@@ -50,6 +62,13 @@ public class NoteActivity extends AppCompatActivity {
         noteTitle = findViewById(R.id.tetxt_note_title);
         noteBody = findViewById(R.id.text_note);
 
+
+        ViewModelProvider vmProvider = new
+                ViewModelProvider(getViewModelStore(), ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
+
+        naViewModel = vmProvider.get(NoteActivityViewModel.class);
+
+
         courseSpinner = (Spinner) findViewById(R.id.spinner_courses);
 
 
@@ -61,9 +80,18 @@ public class NoteActivity extends AppCompatActivity {
         courseSpinner.setAdapter(courseAdapter);
 
         readDisplayStateValues();
+        saveOriginalNoteValues();
         if (!mIsNewNote)
             displayNote(courseSpinner, noteTitle, noteBody);
 
+    }
+
+    private void saveOriginalNoteValues() {
+        if (mIsNewNote)
+            return;
+        naViewModel.originalCourseId = noteInfo.getCourse().getCourseId();
+        naViewModel.originalCourseTitle = noteInfo.getTitle();
+        naViewModel.originalCourseText = noteInfo.getText();
     }
 
     @Override
@@ -106,9 +134,9 @@ public class NoteActivity extends AppCompatActivity {
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
         int courseIndex = courses.indexOf(noteInfo.getCourse());
 
-        courseSpinner.setSelection(courseIndex);
-        noteTitle.setText(noteInfo.getTitle());
-        noteBody.setText(noteInfo.getText());
+        spinner.setSelection(courseIndex);
+        editText.setText(noteInfo.getTitle());
+        editText2.setText(noteInfo.getText());
     }
 
     private void readDisplayStateValues() {
