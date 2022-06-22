@@ -5,6 +5,13 @@
         android:id="@+id/action_email"
         android:title="Send as Email" />
     <item
+        android:id="@+id/action_next_move"
+        android:icon="@android:drawable/ic_media_next"
+        android:title="Next"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_cancel"
-        android:title="Cancel" />
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="Cancel"
+        app:showAsAction="ifRoom" />
 </menu>

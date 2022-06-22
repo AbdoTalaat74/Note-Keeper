@@ -1,6 +1,7 @@
 package com.example.notekeeper;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,12 +17,13 @@ import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
     public static final int POSITION_NOT_SET = -1;
+    public static final String NOTE_POSITION = "com.example.notekeeper.NOTE_POSITION";
     Spinner courseSpinner;
     EditText noteTitle;
     EditText noteBody;
     private boolean mIsNewNote;
     public NoteInfo noteInfo;
-    private int notePosition;
+    public static int notePosition;
     private boolean isCancelling;
     private NoteActivityViewModel naViewModel;
 
@@ -105,15 +107,35 @@ public class NoteActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_email) {
-            sendEmail();
+            String phone = "+34666777888";
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_cancel) {
             isCancelling = true;
             finish();
+        }else if(id==R.id.action_next_move){
+            nextMove();
         }
         return super.onOptionsItemSelected(item);
 
 
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_next_move);
+        int lastNote = DataManager.getInstance().getNotes().size()-1;
+        item.setEnabled(notePosition < lastNote);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void nextMove() {
+        saveNote();
+        ++notePosition;
+        noteInfo = DataManager.getInstance().getNotes().get(notePosition);
+        displayNote(courseSpinner,noteTitle,noteBody);
+        invalidateOptionsMenu();
     }
 
     private void sendEmail() {
@@ -142,22 +164,23 @@ public class NoteActivity extends AppCompatActivity {
     private void readDisplayStateValues() {
 
         Intent intent = getIntent();
-        int position = intent.getIntExtra("Note Position", POSITION_NOT_SET);
-        mIsNewNote = position == POSITION_NOT_SET;
+        notePosition = intent.getIntExtra("Note Position", POSITION_NOT_SET);
+        mIsNewNote = notePosition == POSITION_NOT_SET;
         if (mIsNewNote) {
 
             createNewNote();
 
-        } else {
-            noteInfo = DataManager.getInstance().getNotes().get(position);
         }
+
+        noteInfo = DataManager.getInstance().getNotes().get(notePosition);
+
 
     }
 
     private void createNewNote() {
         DataManager dataManager = DataManager.getInstance();
         notePosition = dataManager.createNewNote();
-        noteInfo = dataManager.getNotes().get(notePosition);
+//        noteInfo = dataManager.getNotes().get(notePosition);
 
     }
 
