@@ -17,7 +17,6 @@ public class noteRecyclerAdapter extends RecyclerView.Adapter<noteRecyclerAdapte
     private final Context mContext;
     private final List<NoteInfo> mNotes;
     private final LayoutInflater layoutInflater;
-    NoteInfo noteInfo;
     public noteRecyclerAdapter(Context context, List<NoteInfo> notes) {
         mContext = context;
         layoutInflater = LayoutInflater.from(context);
